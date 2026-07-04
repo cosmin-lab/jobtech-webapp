@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generatore Annunci — Jobtech</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f6fa;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e8eaf0;
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-dot {
+      width: 10px;
+      height: 10px;
+      background: #00b894;
+      border-radius: 50%;
+    }
+
+    header span {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a2e;
+      letter-spacing: -.3px;
+    }
+
+    header small {
+      font-size: 13px;
+      color: #8b91a8;
+      font-weight: 400;
+      margin-left: 4px;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 48px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -.5px;
+    }
+
+    .subtitle {
+      color: #6c7a8d;
+      font-size: 15px;
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      margin-bottom: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    input, textarea {
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #1a1a2e;
+      transition: border-color .15s;
+      background: #fafbfc;
+      outline: none;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #00b894;
+      background: #fff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.6;
+    }
+
+    button {
+      margin-top: 8px;
+      background: #00b894;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button:hover { background: #00a381; }
+    button:active { transform: scale(.98); }
+    button:disabled { background: #b2d8d0; cursor: not-allowed; }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .output-section { display: none; }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .output-header h2 {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .btn-copy {
+      background: none;
+      color: #00b894;
+      border: 1.5px solid #00b894;
+      padding: 7px 16px;
+      font-size: 13px;
+      border-radius: 7px;
+      margin-top: 0;
+    }
+
+    .btn-copy:hover { background: #f0faf7; }
+
+    .output-text {
+      white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #2d3748;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 20px;
+      background: #fafbfc;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .error-box {
+      background: #fff5f5;
+      border: 1.5px solid #feb2b2;
+      border-radius: 8px;
+      padding: 14px 18px;
+      color: #c53030;
+      font-size: 14px;
+      display: none;
+    }
+
+    .copied-msg {
+      font-size: 12px;
+      color: #00b894;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      header { padding: 16px 20px; }
+      .container { margin: 24px auto; }
+      .card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-dot"></div>
+  <span>Jobtech</span>
+</header>
+
+<div class="container">
+  <h1>Genera un annuncio di lavoro</h1>
+  <p class="subtitle">Inserisci i dati della posizione per generare un annuncio completo, pronto per essere revisionato e pubblicato.</p>
+
+  <div class="card">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="ruolo">Ruolo</label>
+        <input type="text" id="ruolo" placeholder="es. Cameriere/a" />
+      </div>
+      <div class="form-group">
+        <label for="citta">Città</label>
+        <input type="text" id="citta" placeholder="es. Milano" />
+      </div>
+      <div class="form-group full">
+        <label for="titolo">Titolo dell'annuncio</label>
+        <input type="text" id="titolo" placeholder="es. Cameriere/a per ristorante in centro a Milano" />
+      </div>
+      <div class="form-group full">
+        <label for="descrizione">Descrizione breve della posizione</label>
+        <textarea id="descrizione" placeholder="es. Ristorante situato in centro cerca una figura da inserire nel team di sala. Richiesta esperienza minima e disponibilità nei weekend."></textarea>
+      </div>
+    </div>
+
+    <button id="btn-genera" onclick="genera()">
+      <span id="btn-label">Genera annuncio</span>
+      <div class="spinner" id="spinner"></div>
+    </button>
+  </div>
+
+  <div class="error-box" id="error-box"></div>
+
+  <div class="card output-section" id="output-section">
+    <div class="output-header">
+      <h2>Annuncio generato</h2>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="copied-msg" id="copied-msg">✓ Copiato</span>
+        <button class="btn-copy" onclick="copia()">Copia testo</button>
+      </div>
+    </div>
+    <div class="output-text" id="output-text"></div>
+  </div>
+</div>
+
+<script>
+  async function genera() {
+    const ruolo       = document.getElementById('ruolo').value.trim();
+    const citta       = document.getElementById('citta').value.trim();
+    const titolo      = document.getElementById('titolo').value.trim();
+    const descrizione = document.getElementById('descrizione').value.trim();
+
+    if (!ruolo || !citta || !titolo || !descrizione) {
+      mostraErrore('Compila tutti i campi prima di generare.');
+      return;
+    }
+
+    // UI loading
+    nascondiErrore();
+    document.getElementById('output-section').style.display = 'none';
+    document.getElementById('btn-genera').disabled = true;
+    document.getElementById('btn-label').textContent = 'Generazione in corso...';
+    document.getElementById('spinner').style.display = 'block';
+
+    try {
+      const res = await fetch('/genera', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ruolo, citta, titolo, descrizione })
+      });
+
+      const data = await res.json();
+
+      if (data.errore) {
+        mostraErrore(data.errore);
+      } else {
+        document.getElementById('output-text').textContent = data.annuncio;
+        document.getElementById('output-section').style.display = 'block';
+        document.getElementById('output-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } catch (e) {
+      mostraErrore('Errore di connessione. Assicurati che il server sia avviato.');
+    }
+
+    // Reset UI
+    document.getElementById('btn-genera').disabled = false;
+    document.getElementById('btn-label').textContent = 'Genera annuncio';
+    document.getElementById('spinner').style.display = 'none';
+  }
+
+  function copia() {
+    const testo = document.getElementById('output-text').textContent;
+    navigator.clipboard.writeText(testo).then(() => {
+      const msg = document.getElementById('copied-msg');
+      msg.style.opacity = '1';
+      setTimeout(() => msg.style.opacity = '0', 2000);
+    });
+  }
+
+  function mostraErrore(msg) {
+    const box = document.getElementById('error-box');
+    box.textContent = '⚠️ ' + msg;
+    box.style.display = 'block';
+  }
+
+  function nascondiErrore() {
+    document.getElementById('error-box').style.display = 'none';
+  }
+
+  // Genera anche premendo Invio sull'ultimo campo
+  document.getElementById('descrizione').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.ctrlKey) genera();
+  });
+</script>
+
+</body>
+</html>
